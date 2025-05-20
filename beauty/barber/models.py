@@ -3,6 +3,20 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 
+
+    
+class State(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+class City(models.Model):
+    state = models.ForeignKey(State, on_delete=models.CASCADE, related_name='cities')
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+    
 class Barbershop(models.Model):
     """Model for barbershops"""
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='owned_barbershops')
@@ -11,8 +25,8 @@ class Barbershop(models.Model):
     website = models.URLField(blank=True)
     logo = models.ImageField(upload_to='barbershop_logos/', blank=True, null=True)
     address = models.CharField(max_length=255)
-    city = models.CharField(max_length=100)
-    state = models.CharField(max_length=100, blank=True)
+    city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='barbershops')
+    state = models.ForeignKey(State, on_delete=models.CASCADE, related_name='barbershops')
     postal_code = models.CharField(max_length=20)
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
