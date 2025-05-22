@@ -9,6 +9,20 @@ from .permissions import IsOwnerBarberOrReadOnly
 from django.shortcuts import get_object_or_404
 
 
+class CreateBarberProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        # Check if user already has a Barber profile
+        if hasattr(request.user, 'barber_profile'):
+            return Response({"detail": "Barber profile already exists."}, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = BarberSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class BarbershopListCreateView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):

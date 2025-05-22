@@ -8,6 +8,14 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
+
+class BarberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Barber
+        fields = '__all__'
+        read_only_fields = ['user']
+
+
 class BarbershopSerializer(serializers.ModelSerializer):
     class Meta:
         model = Barbershop
