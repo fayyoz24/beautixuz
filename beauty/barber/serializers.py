@@ -55,6 +55,16 @@ class BarberServiceSerializer(serializers.ModelSerializer):
 
 
 class WorkPostSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = WorkPost
+        fields = '__all__'
+        read_only_fields = ['barber']
+
+class AllWorkPostSerializer(serializers.ModelSerializer):
+    service = ServiceSerializer(read_only=True)  # remove many=True
+    barber = BarberSerializer(read_only=True)
+    
     class Meta:
         model = WorkPost
         fields = '__all__'

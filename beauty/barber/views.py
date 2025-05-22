@@ -192,7 +192,7 @@ class AllWorkPostListCreateView(APIView):
     def get(self, request):
         posts = WorkPost.objects.all()
 
-        serializer = WorkPostSerializer(posts, many=True)
+        serializer = AllWorkPostSerializer(posts, many=True)
         return Response(serializer.data)
 
 
