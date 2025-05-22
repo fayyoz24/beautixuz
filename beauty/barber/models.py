@@ -70,7 +70,7 @@ class Barber(models.Model):
     telegram_handle = models.CharField(max_length=100, blank=True)
     
     def __str__(self):
-        return self.user.get_full_name() or self.user.username
+        return self.first_name + " " + self.last_name
 
 
 class BarbershopService(models.Model):
@@ -122,13 +122,13 @@ class WorkPost(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='work_posts/', null=True, blank=True)
-    service = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True, blank=True, related_name='work_posts')
+    service = models.ManyToManyField(Service, related_name='work_posts')
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     likes_count = models.PositiveIntegerField(default=0)
     
     def __str__(self):
-        return f"{self.title} by {self.barber.user.get_full_name() or self.barber.user.username}"
+        return f"{self.title} by {self.barber.first_name}"
 
 
 class Like(models.Model):
@@ -156,7 +156,7 @@ class AvailabilitySlot(models.Model):
         ordering = ['date', 'start_time']
     
     def __str__(self):
-        return f"{self.barber.user.get_full_name() or self.barber.user.username} - {self.date} {self.start_time}-{self.end_time}"
+        return f"{self.barber.first_name or self.barber.user.username} - {self.date} {self.start_time}-{self.end_time}"
 
 
 class Appointment(models.Model):
@@ -186,7 +186,7 @@ class Appointment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return f"{self.customer.username} - {self.barber_service.service.name} with {self.barber.user.get_full_name() or self.barber.user.username} on {self.date} at {self.start_time}"
+        return f"{self.customer.username} - {self.barber_service.service.name} with {self.barber.first_name or self.barber.user.username} on {self.date} at {self.start_time}"
 
 
 class Review(models.Model):

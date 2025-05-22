@@ -45,7 +45,7 @@ class WorkPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkPost
         fields = '__all__'
-
+        read_only_fields = ['barber']
 
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
