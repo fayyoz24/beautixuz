@@ -172,7 +172,7 @@ class WorkPostListCreateView(APIView):
     def get(self, request):
         posts = WorkPost.objects.filter(barber=request.user.barber_profile)
 
-        serializer = WorkPostSerializer(posts, many=True)
+        serializer = AllWorkPostSerializer(posts, many=True)
         return Response(serializer.data)
 
     def post(self, request):
@@ -204,13 +204,13 @@ class WorkPostDetailView(APIView):
 
     def get(self, request, pk):
         post = self.get_object(pk)
-        serializer = WorkPostSerializer(post)
+        serializer = AllWorkPostSerializer(post)
         return Response(serializer.data)
 
     def put(self, request, pk):
         post = self.get_object(pk)
         self.check_object_permissions(request, post)
-        serializer = WorkPostSerializer(post, data=request.data, partial=True)
+        serializer = AllWorkPostSerializer(post, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()  # barber remains unchanged
             return Response(serializer.data)
