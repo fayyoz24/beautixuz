@@ -3,10 +3,64 @@ from rest_framework.response import Response
 from .models import *
 from .serializers import *
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.permissions import (IsAuthenticatedOrReadOnly, 
+                                        IsAuthenticated,
+                                )
 
-from .permissions import IsOwnerBarberOrReadOnly
+from .permissions import (IsOwnerBarberOrReadOnly, IsSuperUserOrReadOnly,
+                          IsBarberOwnerOrSuperuser)
 from django.shortcuts import get_object_or_404
+
+from .serializers import ServiceSerializer
+
+
+class ServiceListCreateView(APIView):
+    permission_classes = [IsSuperUserOrReadOnly]
+
+    def get(self, request):
+        services = Service.objects.all()
+        serializer = ServiceSerializer(services, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = ServiceSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ServiceDetailView(APIView):
+    permission_classes = [IsSuperUserOrReadOnly]
+
+    def get_object(self, pk):
+        return get_object_or_404(Service, pk=pk)
+
+    def get(self, request, pk):
+        service = self.get_object(pk)
+        serializer = ServiceSerializer(service)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        service = self.get_object(pk)
+        serializer = ServiceSerializer(service, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk):
+        service = self.get_object(pk)
+        serializer = ServiceSerializer(service, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        service = self.get_object(pk)
+        service.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class CreateBarberProfileView(APIView):
@@ -22,6 +76,47 @@ class CreateBarberProfileView(APIView):
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class BarberDetailView(APIView):
+    def get_permissions(self):
+        if self.request.method in ['PUT', 'PATCH', 'DELETE']:
+            return [IsBarberOwnerOrSuperuser()]
+        return []  # No auth required for GET
+
+    def get_object(self, pk):
+        return get_object_or_404(Barber, pk=pk)
+
+    def get(self, request, pk):
+        barber = self.get_object(pk)
+        serializer = BarberSerializer(barber)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        barber = self.get_object(pk)
+        self.check_object_permissions(request, barber)
+        serializer = BarberSerializer(barber, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk):
+        barber = self.get_object(pk)
+        self.check_object_permissions(request, barber)
+        serializer = BarberSerializer(barber, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        barber = self.get_object(pk)
+        self.check_object_permissions(request, barber)
+        barber.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class BarbershopListCreateView(APIView):
     permission_classes = [IsAuthenticated]
