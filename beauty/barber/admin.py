@@ -8,7 +8,9 @@ from .models import (
     WorkPost,
     Like,
     AvailabilitySlot,
-    Appointment
+    Appointment, 
+    City, 
+    State
 )
 # Register your models here.
 admin.site.register(Barbershop)
@@ -18,5 +20,7 @@ admin.site.register(BarbershopService)
 admin.site.register(BarberService)
 admin.site.register(WorkPost)
 admin.site.register(Like)
+admin.site.register(City)
+admin.site.register(State)
 admin.site.register(AvailabilitySlot)
 admin.site.register(Appointment)
