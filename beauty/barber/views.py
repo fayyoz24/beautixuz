@@ -195,6 +195,15 @@ class AllWorkPostListCreateView(APIView):
         serializer = AllWorkPostSerializer(posts, many=True)
         return Response(serializer.data)
 
+class AllWorkPostListCreateView(APIView):
+    def get(self, request):
+        service_ids = request.query_params.getlist('service_id')
+        if service_ids:
+            workposts = WorkPost.objects.filter(service__id__in=service_ids).distinct()
+        else:
+            workposts = WorkPost.objects.all()
+        serializer = AllWorkPostSerializer(workposts, many=True)
+        return Response(serializer.data)
 
 class WorkPostDetailView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerBarberOrReadOnly]
