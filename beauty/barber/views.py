@@ -199,9 +199,9 @@ class AllWorkPostListCreateView(APIView):
     def get(self, request):
         service_ids = request.query_params.getlist('service_id')
         if service_ids:
-            workposts = WorkPost.objects.filter(service__id__in=service_ids).distinct()
+            workposts = WorkPost.objects.filter(service__id__in=service_ids).distinct().order_by('-id') 
         else:
-            workposts = WorkPost.objects.all()
+            workposts = WorkPost.objects.all().order_by('-id')
         serializer = AllWorkPostSerializer(workposts, many=True)
         return Response(serializer.data)
 
