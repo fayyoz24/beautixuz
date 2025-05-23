@@ -62,13 +62,14 @@ class WorkPostSerializer(serializers.ModelSerializer):
         read_only_fields = ['barber']
 
 class AllWorkPostSerializer(serializers.ModelSerializer):
-    service = ServiceSerializer(read_only=True)  # remove many=True
+    service = ServiceSerializer(many=True, read_only=True) 
     barber = BarberSerializer(read_only=True)
     
     class Meta:
         model = WorkPost
         fields = '__all__'
         read_only_fields = ['barber']
+
 
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
