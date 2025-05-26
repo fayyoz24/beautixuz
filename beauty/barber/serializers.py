@@ -1,12 +1,21 @@
 from rest_framework import serializers
 from .models import (
     Barbershop, Service, Barber, BarbershopService, BarberService,
-    WorkPost, Like, AvailabilitySlot, Appointment, Review
+    WorkPost, Like, AvailabilitySlot, Appointment, Review, City, State
 )
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+class CitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        fields = '__all__'
+
+class StateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = State
+        fields = '__all__'
 
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:

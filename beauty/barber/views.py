@@ -6,13 +6,20 @@ from rest_framework import status
 from rest_framework.permissions import (IsAuthenticatedOrReadOnly, 
                                         IsAuthenticated,
                                 )
-
+from rest_framework import generics
 from .permissions import (IsOwnerBarberOrReadOnly, IsSuperUserOrReadOnly,
                           IsBarberOwnerOrSuperuser)
 from django.shortcuts import get_object_or_404
 
-from .serializers import ServiceSerializer
+class CityListView(generics.ListAPIView):
+    queryset = City.objects.all()
+    serializer_class = CitySerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
+class StateListView(generics.ListAPIView):
+    queryset = State.objects.all()
+    serializer_class = StateSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 class ServiceListCreateView(APIView):
     permission_classes = [IsSuperUserOrReadOnly]

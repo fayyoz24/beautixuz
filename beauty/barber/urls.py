@@ -13,5 +13,7 @@ urlpatterns = [
     path('all-work-posts/<int:pk>/', WorkPostDetailView.as_view(), name='all-posts/int'),
     path('appointments/', AppointmentListCreateView.as_view(), name='appointment-list-create'),
     path('services/', ServiceListCreateView.as_view(), name='service-list-create'),
+    path('cities/', CityListView.as_view(), name='cities'),
+    path('states/', ServiceListCreateView.as_view(), name='states'),
     path('services/<int:pk>/', ServiceDetailView.as_view(), name='service-detail'),
 ]
