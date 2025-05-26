@@ -46,11 +46,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         # Add extra responses
         data.update({
-            'user_id': self.user.id,
             'username': self.user.username,
-            'email': self.user.email,
             # Add any custom fields as needed
-            'is_staff': self.user.is_staff,
             'user_type': getattr(self.user, 'user_type', None),  # If you have a custom field
         })
 
