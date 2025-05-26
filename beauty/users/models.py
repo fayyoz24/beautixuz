@@ -18,11 +18,17 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault("is_superuser", True)
         return self.create_user(phone_number, username, password, **extra_fields)
 
+
+USER_TYPE_CHOICES = [('B', 'BARBER'), ('S', 'BARBERSHOP'),
+                      ('A', 'ADMIN'), ('U', 'COMMON_USER')]
+
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField(max_length=20, unique=True)
     username = models.CharField(max_length=150, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    user_type = models.CharField(max_length=1, choices=USER_TYPE_CHOICES, verbose_name="User Type", default='U')
+   
     phone_confirmed = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'phone_number'
