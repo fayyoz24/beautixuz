@@ -11,7 +11,6 @@ from .permissions import (IsOwnerBarberOrReadOnly, IsSuperUserOrReadOnly,
                           IsBarberOwnerOrSuperuser)
 from django.shortcuts import get_object_or_404
 
-Barber.objects.all().delete()  # Clear existing barbers if any
 class CityListView(generics.ListAPIView):
     queryset = City.objects.all()
     serializer_class = CitySerializer
