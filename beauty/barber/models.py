@@ -70,7 +70,6 @@ class Barber(models.Model):
     def __str__(self):
         return self.first_name + " " + self.last_name
 
-Barber.objects.all().delete()  # Clear existing barbers if any
 
 class BarbershopService(models.Model):
     """Model linking barbershops to services with pricing"""
