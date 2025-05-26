@@ -51,7 +51,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             'email': self.user.email,
             # Add any custom fields as needed
             'is_staff': self.user.is_staff,
-            'role': getattr(self.user, 'role', None),  # If you have a custom field
+            'user_type': getattr(self.user, 'user_type', None),  # If you have a custom field
         })
 
         return data
