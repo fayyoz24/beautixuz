@@ -13,9 +13,10 @@ class SignupSerializer(serializers.ModelSerializer):
 
     def validate_phone_number(self, value):
         value = value.strip()
-        if not re.match(r'^\+998\d{9}$', value):
-            raise serializers.ValidationError("Phone number must start with +998 and be exactly 17 characters.")
+        if not re.match(r'^\+998 \d{2} \d{3} \d{2} \d{2}$', value):
+            raise serializers.ValidationError("Phone number must be in the format +998 91 123 45 67.")
         return value
+
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
