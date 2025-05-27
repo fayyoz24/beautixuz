@@ -7,6 +7,7 @@ urlpatterns = [
     path('work-posts/', WorkPostListCreateView.as_view(), name='workpost-list-create'),
 
     path('barbers/create/', CreateBarberProfileView.as_view(), name='create-barber-profile'),
+    path('barbers/barber-profile/', BarberProfileView.as_view(), name='barber-profile'),
     path('barbers/<int:pk>/', BarberDetailView.as_view(), name='barber-detail'),
     path('all-work-posts/', AllWorkPostListCreateView.as_view(), name='all-posts'),
     # path('filter-all-work-posts/', WorkPostFilterByService.as_view(), name='filter-all-work-posts/'),

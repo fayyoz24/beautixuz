@@ -87,7 +87,28 @@ class CreateBarberProfileView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+from rest_framework import generics
+from rest_framework.exceptions import NotFound
+from django.core.exceptions import ObjectDoesNotExist
 
+class BarberProfileView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Alternative implementation using DRF generics.
+    Provides GET, PUT, PATCH, and DELETE operations.
+    """
+    serializer_class = BarberSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_object(self):
+        """Get the barber profile for the authenticated user."""
+        try:
+            return self.request.user.barber_profile
+        except (AttributeError, ObjectDoesNotExist):
+            raise NotFound("Barber profile does not exist")
+    
+    def perform_destroy(self, instance):
+        """Custom delete behavior if needed."""
+        instance.delete()
 
 class BarberDetailView(APIView):
     def get_permissions(self):
